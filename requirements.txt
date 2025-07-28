@@ -1,0 +1,4 @@
+Flask
+requests
+browser-cookie3
+openpyxl

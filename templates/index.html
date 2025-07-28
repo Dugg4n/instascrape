@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Instagram Comment Scraper</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to right, #f1f5f9, #e2e8f0);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 40px;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 600px;
+        }
+        h1 {
+            text-align: center;
+            color: #1f2937;
+            margin-bottom: 25px;
+        }
+        label {
+            font-weight: 600;
+            color: #374151;
+            margin-top: 15px;
+            display: block;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px 14px;
+            margin-top: 6px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: #f8fafc;
+        }
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background: #2563eb;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        button:hover {
+            background: #1d4ed8;
+        }
+        .msg {
+            color: #44dc26;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: 500;
+        }
+        .preview {
+            margin-top: 30px;
+        }
+        .preview h2 {
+            font-size: 18px;
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+        .preview-box {
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 15px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+        }
+        .preview-box p {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Instagram Comment Scraper</h1>
+        <form method="POST" onsubmit="handleFormSubmit(event)">
+            <label>Instagram URL:</label>
+            <input type="text" name="url" placeholder="https://www.instagram.com/p/ABC123/" required>
+
+            <label>Nama File (tanpa ekstensi):</label>
+            <input type="text" name="filename" placeholder="contoh: komentar_postinganku" required>
+
+            <label>Download Format:</label>
+            <select name="format">
+                <option value="txt">TXT</option>
+                <option value="json">JSON</option>
+                <option value="xlsx">Excel (XLSX)</option>
+            </select>
+
+            <button type="submit" name="preview">Preview Comments</button>
+            <button type="submit" name="download">Download File</button>
+
+            <div id="loading-msg" class="msg" style="display: none;">Previewing comments...</div>
+
+            {% if message %}
+                <div class="msg">{{ message }}</div>
+            {% endif %}
+        </form>
+
+        {% if comments %}
+            <div class="preview">
+                <h2>Preview Comments ({{ comments|length }})</h2>
+                <div class="preview-box">
+                    {% for c in comments %}
+                        <p>
+                            {% if c.reply_to %}
+                                ↳ <strong>{{ c.user }}</strong>: {{ c.comment }}
+                            {% else %}
+                                <strong>{{ c.user }}</strong>: {{ c.comment }}
+                            {% endif %}
+                        </p>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        function handleFormSubmit(e) {
+            const loadingMsg = document.getElementById("loading-msg");
+            if (document.activeElement.name === "preview") {
+                loadingMsg.style.display = "block";
+            } else {
+                loadingMsg.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
